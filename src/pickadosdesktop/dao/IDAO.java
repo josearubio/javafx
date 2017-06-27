@@ -6,8 +6,8 @@
 package pickadosdesktop.dao;
 
 import java.util.List;
-import pickadosdesktop.model.Match;
-import pickadosdesktop.model.Odd;
+import pickadosdesktop.entity.Match;
+import pickadosdesktop.entity.Odd;
 
 /**
  *

@@ -14,7 +14,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="comingEventsList" layoutY="-2.0" prefHeight="300.0" prefWidth="200.0" />
+                        <ListView fx:id="comingEventsList" layoutY="-2.0" onMouseClicked="#lvOnClick" prefHeight="300.0" prefWidth="200.0" />
                      </children>
                   </AnchorPane>
               </content>
@@ -23,14 +23,20 @@
          <center>
             <Pane prefHeight="357.0" prefWidth="284.0" BorderPane.alignment="CENTER">
                <children>
-                  <ListView layoutY="42.0" prefHeight="314.0" prefWidth="286.0" />
-                  <Label layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="28.0" text="Live" />
+                  <Label layoutX="14.0" layoutY="2.0" prefHeight="24.0" prefWidth="62.0" text="Cuotas" />
+                  <TableView fx:id="oddTable" layoutY="26.0" prefHeight="332.0" prefWidth="436.0">
+                    <columns>
+                      <TableColumn fx:id="bookie_column" prefWidth="75.0" text="Bookie" />
+                      <TableColumn fx:id="home_column" prefWidth="37.0" text="Local" />
+                        <TableColumn fx:id="draw_column" prefWidth="60.0" text="Empate" />
+                        <TableColumn fx:id="away_column" prefWidth="61.0" text="Visitante" />
+                        <TableColumn fx:id="under_column" prefWidth="75.0" text="-2.5 goles" />
+                        <TableColumn fx:id="over_column" prefWidth="75.0" text="+2.5 goles" />
+                    </columns>
+                  </TableView>
                </children>
             </Pane>
          </center>
-         <right>
-            <Pane prefHeight="357.0" prefWidth="150.0" BorderPane.alignment="CENTER" />
-         </right>
          <top>
             <Pane prefHeight="55.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
          </top>

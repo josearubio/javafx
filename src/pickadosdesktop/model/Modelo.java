@@ -5,6 +5,8 @@
  */
 package pickadosdesktop.model;
 
+import pickadosdesktop.entity.Odd;
+import pickadosdesktop.entity.Match;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -20,6 +22,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pickadosdesktop.dao.IDAO;
+import pickadosdesktop.service.ApiFootballServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -34,13 +37,15 @@ public class Modelo {
     private final ObjectProperty<ObservableList<Match>> matches;
 
     private final IDAO clientDAO;
+    private final ApiFootballServices apiFootballServices;
+    private final ObservableList<OddRow> oddRows;
     private final long msRefresco;
     private static final long DELAY = 3000;
-    private  Gson gson = new Gson();
     
         public Modelo(IDAO clientDAO, long msRefresco) {
 	matches = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-        
+        apiFootballServices = new ApiFootballServices();
+        oddRows = FXCollections.observableArrayList();
         this.clientDAO = clientDAO;
 	odds = new SimpleObjectProperty<>(FXCollections.observableArrayList());
         
@@ -48,25 +53,17 @@ public class Modelo {
             matches.get().add(match);
         }
         
+        //INITIALIZE ODD TABLE DATA
+        oddRows.add(new OddRow("bet365","2","2","2","3","1.5"));
+        
         TimerTask delayedTask = new TimerTask() {
 	    @Override
 	    public void run() {
                 Platform.runLater(new Runnable() {
                 @Override 
                 public void run(){
-                try {
-			URL url = new URL("https://apifootball.com/api/?action=get_events&from=2016-10-30&to=2016-11-01&league_id=62&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
-			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-			String response = "";
-			while (null != (response = br.readLine())) {
-                                Type matchType = new TypeToken<Collection<Match>>() {}.getType();
-                                List<Match> matchesRetrieved = gson.fromJson(response, matchType);
-                                matches.get().addAll(matchesRetrieved);
-			}
-                        
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+                    List<Match> matchesRetrieved = apiFootballServices.getMatches();
+                    matches.get().addAll(matchesRetrieved);
                 }});
 	    }
 	};
@@ -76,6 +73,10 @@ public class Modelo {
 	this.msRefresco = msRefresco;
         }
         
+        public ObservableList<OddRow> oddRowsProperty() {
+            return oddRows;
+        }
+            
         public ObjectProperty<ObservableList<Match>> matchesProperty() {
             return matches;
         }

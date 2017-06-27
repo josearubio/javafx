@@ -10,16 +10,23 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import pickadosdesktop.dao.IDAO;
 import pickadosdesktop.dao.LocalDAO;
-import pickadosdesktop.model.Match;
+import pickadosdesktop.entity.Match;
 import pickadosdesktop.model.Modelo;
+import pickadosdesktop.model.OddRow;
 
 /**
  * FXML Controller class
@@ -29,6 +36,23 @@ import pickadosdesktop.model.Modelo;
 public class DashboardController implements Initializable {
     @FXML
     private ListView<Match> comingEventsList;
+    
+    @FXML
+    private TableView<OddRow> oddTable;
+    
+    @FXML
+    private TableColumn<OddRow, String> bookie_column;
+    @FXML
+    private TableColumn<OddRow, String> home_column;
+    @FXML
+    private TableColumn<OddRow, String> draw_column;
+    @FXML
+    private TableColumn<OddRow, String> away_column;
+    @FXML
+    private TableColumn<OddRow, String> over_column;
+    @FXML
+    private TableColumn<OddRow, String> under_column;
+    
     
     Modelo modelo;
     
@@ -42,6 +66,7 @@ public class DashboardController implements Initializable {
         modelo = new Modelo(clientDAO, 0);
        // comingEventsList.itemsProperty().bind(modelo.matchesProperty());
         initializeMatches();
+        initOddTable();
     }    
     
     public void initializeMatches(){
@@ -74,5 +99,37 @@ public class DashboardController implements Initializable {
 	    }
 	});
     }
+    
+        private void initOddTable() {
+	oddTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	oddTable.itemsProperty().bind(new SimpleObjectProperty<>(modelo.oddRowsProperty()));
+	
+	bookie_column.setCellValueFactory(new PropertyValueFactory<>("odd_bookmakers"));
+	home_column.setCellValueFactory(new PropertyValueFactory<>("odd_1"));
+	draw_column.setCellValueFactory(new PropertyValueFactory<>("odd_x"));
+        away_column.setCellValueFactory(new PropertyValueFactory<>("odd_2"));
+        over_column.setCellValueFactory(new PropertyValueFactory<>("over"));
+        under_column.setCellValueFactory(new PropertyValueFactory<>("under"));
+    }
+        
+        public void loadEventOdds(String id){
+            //1º VACIAR TABLA (oddTable)
+            //2º Lo suyo sería llamar al metodo del servicio que llamara a la api, 
+            // pero he visto que en la consulta de cuotas hay partidos que faltan,
+            // habra que fakear cargando un JSON. Por lo tanto yo llamaría a un metodo del DAO,
+            // que devuelva las ODDS ya parseadas para dicho partido. 
+            //3º Una vez tenemos la lista de Odds (ODD entity), hay que añadirlas a
+            // la lista observable oddRows del modelo.java, y entonces estas apareceran
+            // en la tabla. Investigar si se puede parsear directamente a OddRow. En caso
+            // negativo, crear un metodo en el servicio que transforme una lista de Odds en OddsRows, y añadirlas
+            // en el modelo.
+        }
+        
+        @FXML 
+        public void lvOnClick(MouseEvent arg0) {
+            
+        System.out.println("clicked on " + comingEventsList.getSelectionModel().getSelectedItem());
+            loadEventOdds(comingEventsList.getSelectionModel().getSelectedItem().getId());
+        }
     
 }

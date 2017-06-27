@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import pickadosdesktop.model.Match;
-import pickadosdesktop.model.Odd;
-import pickadosdesktop.model.State;
+import pickadosdesktop.entity.Match;
+import pickadosdesktop.entity.Odd;
+import pickadosdesktop.entity.State;
 import pickadosdesktop.utilities.DBManager;
 
 /**
@@ -22,12 +22,12 @@ import pickadosdesktop.utilities.DBManager;
 public class LocalDAO implements IDAO{
     private List<Odd> oddList = new ArrayList<>();
     private List<Match> matchList = new ArrayList<>();
-    private Connection conn = DBManager.getConnection(); 
+    //private Connection conn = DBManager.getConnection(); 
     
     public LocalDAO () {
-        Match match1 = new Match("1","Elche", "Hércules", State.UNSTARTED);
-        Match match2 = new Match("2","Albacete", "Oviedo", State.UNSTARTED);
-        Match match3 = new Match("3","Valencia", "Eibar", State.UNSTARTED);
+        Match match1 = new Match("1","Elche", "Hércules", State.UNSTARTED,0);
+        Match match2 = new Match("2","Albacete", "Oviedo", State.UNSTARTED,0);
+        Match match3 = new Match("3","Valencia", "Eibar", State.UNSTARTED,0);
         matchList.add(match1);
         matchList.add(match2);
         matchList.add(match3);
