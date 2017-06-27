@@ -6,6 +6,7 @@
  */
 package pickadosdesktop.entity;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
@@ -13,37 +14,42 @@ import java.util.List;
  * @author JoseAntonio
  */
 public class Match {
-    private String id;
-    private String match_hometeam_name;
-    private String match_awayteam_name;
+    @SerializedName("match_id") 
+    private String id; 
+    @SerializedName("match_hometeam_name") 
+    private String home_team;
+    @SerializedName("match_awayteam_name") 
+    private String away_team;
     private State state;
-    private int home_score;
-    private int home_away;
+    @SerializedName("match_hometeam_score") 
+    private String home_score;
+    @SerializedName("match_awayteam_score") 
+    private String away_score;
     private int match_live;
     private List<Odd> odds;
 
     public Match(String id, String home_team, String away_team, State state, int match_live) {
         this.id = id;
-        this.match_hometeam_name = home_team;
-        this.match_awayteam_name = away_team;
+        this.home_team = home_team;
+        this.away_team = away_team;
         this.state = state;
         this.match_live = match_live;
     }
 
     public String getMatch_hometeam_name() {
-        return match_hometeam_name;
+        return home_team;
     }
 
     public void setMatch_hometeam_name(String match_hometeam_name) {
-        this.match_hometeam_name = match_hometeam_name;
+        this.home_team = match_hometeam_name;
     }
 
     public String getMatch_awayteam_name() {
-        return match_awayteam_name;
+        return away_team;
     }
 
     public void setMatch_awayteam_name(String match_awayteam_name) {
-        this.match_awayteam_name = match_awayteam_name;
+        this.away_team = match_awayteam_name;
     }
 
     public int getMatch_live() {
@@ -59,23 +65,23 @@ public class Match {
     }
 
     public String getHome_team() {
-        return match_hometeam_name;
+        return home_team;
     }
 
     public String getAway_team() {
-        return match_awayteam_name;
+        return away_team;
     }
 
     public State getState() {
         return state;
     }
 
-    public int getHome_score() {
+    public String getHome_score() {
         return home_score;
     }
 
-    public int getHome_away() {
-        return home_away;
+    public String getHome_away() {
+        return away_score;
     }
 
     public void setId(String id) {
@@ -83,23 +89,23 @@ public class Match {
     }
 
     public void setHome_team(String home_team) {
-        this.match_hometeam_name = home_team;
+        this.home_team = home_team;
     }
 
     public void setAway_team(String away_team) {
-        this.match_awayteam_name = away_team;
+        this.away_team = away_team;
     }
 
     public void setState(State state) {
         this.state = state;
     }
 
-    public void setHome_score(int home_score) {
+    public void setHome_score(String home_score) {
         this.home_score = home_score;
     }
 
-    public void setHome_away(int home_away) {
-        this.home_away = home_away;
+    public void setHome_away(String home_away) {
+        this.away_score = home_away;
     }
 
     public List<Odd> getOdds() {
@@ -115,6 +121,6 @@ public class Match {
     }
     
     public String toString() {
-        return "" + match_hometeam_name + " - " + match_awayteam_name + "";
+        return "" + home_team + " " + home_score + " - " + " " + away_score + " " + away_team + "";
     }
 }

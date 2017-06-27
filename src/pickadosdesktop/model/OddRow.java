@@ -20,6 +20,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import pickadosdesktop.entity.Odd;
 
 /**
  *
@@ -45,6 +46,16 @@ public class OddRow {
         this.odd_2.set(odd_2);
         this.over.set(over);
         this.under.set(under);
+    }
+    
+     public OddRow(Odd odd)
+    {
+        this.odd_bookmakers.set(odd.getOdd_bookmakers());
+        this.odd_1.set(odd.getOdd_1());
+        this.odd_x.set(odd.getOdd_x());
+        this.odd_2.set(odd.getOdd_2());
+        this.over.set(odd.getOver());
+        this.under.set(odd.getUnder());
     }
 
     public String getOdd_bookmakers() {

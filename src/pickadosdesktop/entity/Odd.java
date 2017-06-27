@@ -5,6 +5,8 @@
  */
 package pickadosdesktop.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author JoseAntonio
@@ -16,6 +18,26 @@ public class Odd {
     private String odd_x;
     private String odd_2;
     private String odd_bookmakers;
+    @SerializedName("o+2.5") 
+    private String over;
+    @SerializedName("u+2.5") 
+    private String under;
+
+    public String getOver() {
+        return over;
+    }
+
+    public void setOver(String over) {
+        this.over = over;
+    }
+
+    public String getUnder() {
+        return under;
+    }
+
+    public void setUnder(String under) {
+        this.under = under;
+    }
 
     public Odd(){
         odd_bookmakers = "bet365";
