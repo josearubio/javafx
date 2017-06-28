@@ -23,7 +23,7 @@ public class PickadosApp extends Application {
 	Parent root = FXMLLoader.load(getClass().getResource("Dashboard.fxml"));
 	
 	Scene scene = new Scene(root);
-	
+	//scene.getStylesheets().add(getClass().getResource("table-view.css").toExternalForm());
 	stage.setScene(scene);
 	stage.show();
     }

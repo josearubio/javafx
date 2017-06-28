@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -10,21 +11,23 @@
    <children>
       <BorderPane layoutX="2.0" layoutY="2.0" prefHeight="445.0" prefWidth="637.0">
          <left>
-            <TitledPane animated="false" prefHeight="322.0" prefWidth="202.0" text="Proximos eventos" BorderPane.alignment="CENTER">
+            <TitledPane animated="false" prefHeight="322.0" prefWidth="221.0" text="Eventos de hoy" textFill="#5b5b9a" BorderPane.alignment="CENTER">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="comingEventsList" layoutY="-2.0" onMouseClicked="#lvOnClick" prefHeight="300.0" prefWidth="200.0" />
+                        <ListView fx:id="comingEventsList" layoutY="-2.0" onMouseClicked="#lvOnClick" prefHeight="300.0" prefWidth="219.0" />
                      </children>
                   </AnchorPane>
               </content>
+               <font>
+                  <Font size="15.0" />
+               </font>
             </TitledPane>
          </left>
          <center>
             <Pane prefHeight="357.0" prefWidth="284.0" BorderPane.alignment="CENTER">
                <children>
-                  <Label layoutX="14.0" layoutY="2.0" prefHeight="24.0" prefWidth="62.0" text="Cuotas" />
-                  <TableView fx:id="oddTable" layoutY="26.0" prefHeight="332.0" prefWidth="436.0">
+                  <TableView fx:id="oddTable" layoutY="23.0" prefHeight="335.0" prefWidth="385.0" stylesheets="@../../resources/table-view.css">
                     <columns>
                       <TableColumn fx:id="bookie_column" prefWidth="75.0" text="Bookie" />
                       <TableColumn fx:id="home_column" prefWidth="37.0" text="Local" />
@@ -34,11 +37,15 @@
                         <TableColumn fx:id="over_column" prefWidth="75.0" text="+2.5 goles" />
                     </columns>
                   </TableView>
+                  <Label layoutX="7.0" layoutY="-5.0" prefHeight="39.0" prefWidth="211.0" text="Comparador cuotas">
+                     <font>
+                        <Font name="Bauer" size="12.0" />
+                     </font></Label>
                </children>
             </Pane>
          </center>
          <top>
-            <Pane prefHeight="55.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
+            <Pane prefHeight="47.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
          </top>
          <bottom>
             <Pane prefHeight="33.0" prefWidth="637.0" BorderPane.alignment="CENTER" />

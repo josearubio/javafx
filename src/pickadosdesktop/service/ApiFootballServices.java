@@ -24,12 +24,15 @@ import pickadosdesktop.model.OddRow;
  * @author JoseAntonio
  */
 public class ApiFootballServices {
+    
+    private Utils utils = new Utils();
 
     public List<Match> getMatches() {
         Gson gson = new Gson();
         List<Match> matchesRetrieved = new ArrayList<>();
+        String currentDate = utils.getFormattedCurrentDate();
         try {
-            URL url = new URL("https://apifootball.com/api/?action=get_events&from=2017-06-27&to=2017-06-27&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
+            URL url = new URL("https://apifootball.com/api/?action=get_events&from=" + currentDate + "&to=" + currentDate + "&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {
@@ -47,8 +50,11 @@ public class ApiFootballServices {
     public List<Match> getLiveMatches() {
         Gson gson = new Gson();
         List<Match> matchesRetrieved = new ArrayList<>();
+        String currentDate = utils.getFormattedCurrentDate();
+
         try {
-            URL url = new URL("https://apifootball.com/api/?action=get_events&from=2017-06-27&to=2017-06-27&match_live=1&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
+            
+            URL url = new URL("https://apifootball.com/api/?action=get_events&from=" + currentDate + "&to=" + currentDate + "&match_live=1&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {
@@ -67,8 +73,9 @@ public class ApiFootballServices {
         Gson gson = new Gson();
         List<OddRow> rows = new ArrayList<>();
         List<Odd> odds = new ArrayList<>();
+        String currentDate = utils.getFormattedCurrentDate();
         try {
-            URL url = new URL("https://apifootball.com/api/?action=get_odds&from=2017-06-27&to=2017-06-27&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd&match_id="+matchId);
+            URL url = new URL("https://apifootball.com/api/?action=get_odds&from=" + currentDate + "&to=" + currentDate + "&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd&match_id="+matchId);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {

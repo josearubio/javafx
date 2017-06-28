@@ -34,6 +34,8 @@ public class Match {
         this.away_team = away_team;
         this.state = state;
         this.match_live = match_live;
+        this.home_score = "";
+        this.away_score = "";
     }
 
     public String getMatch_hometeam_name() {
