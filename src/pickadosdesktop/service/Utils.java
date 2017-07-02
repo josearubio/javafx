@@ -1,13 +1,11 @@
 package pickadosdesktop.service;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import pickadosdesktop.ui.PickadosApp;
-import pickadosdesktop.utilities.DBManager;
 
 public final class Utils {
     private final static Logger logger = Logger.getLogger(Utils.class);

@@ -27,6 +27,8 @@ import pickadosdesktop.entity.Match;
 import pickadosdesktop.model.Modelo;
 import pickadosdesktop.model.OddRow;
 import pickadosdesktop.service.ApiFootballServices;
+import pickadosdesktop.service.ApiParser;
+import pickadosdesktop.service.Utils;
 
 /**
  * FXML Controller class
@@ -34,12 +36,13 @@ import pickadosdesktop.service.ApiFootballServices;
  * @author JoseAntonio
  */
 public class DashboardController implements Initializable {
+
     @FXML
     private ListView<Match> comingEventsList;
-    
+
     @FXML
     private TableView<OddRow> oddTable;
-    
+
     @FXML
     private TableColumn<OddRow, String> bookie_column;
     @FXML
@@ -52,74 +55,77 @@ public class DashboardController implements Initializable {
     private TableColumn<OddRow, String> over_column;
     @FXML
     private TableColumn<OddRow, String> under_column;
+
     
-    private final ApiFootballServices apiFootballServices = new ApiFootballServices();;
+    private final ApiFootballServices apiFootballServices = new ApiFootballServices(Utils.getProperty("api"), Utils.getProperty("apiKey"), new ApiParser());
     
     Modelo model;
-    
+
     IDAO clientDAO;
+
     /**
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
         clientDAO = new LocalDAO();
         model = new Modelo(clientDAO, 0);
         initializeMatches();
         initOddTable();
-    }    
-    
-    public void initializeMatches(){
-        
-        List<Match> matchesRetrieved = apiFootballServices.getLiveMatches();
-        comingEventsList.getItems().addAll(matchesRetrieved);
-        
-    	model.matchesProperty().get().addListener(new ListChangeListener<Match>() {
-	    @Override
-	    public void onChanged(ListChangeListener.Change<? extends Match> c) {
-		while (c.next()) {
-		    if (c.wasAdded()) { 
-			for (Match match : c.getAddedSubList()) {
-                            comingEventsList.getItems().add(match);
-			}
-		    }
-		}
-	    }
-	});
-        
-	comingEventsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Match>() {
-	    @Override
-	    public void changed(ObservableValue<? extends Match> observable, Match oldValue, Match newValue) {
-		if (newValue != null) {
-		    newValue.onFocus();
-		}
-	    }
-	});
     }
-    
-        private void initOddTable() {
-	oddTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-	oddTable.itemsProperty().bind(new SimpleObjectProperty<>(model.oddRowsProperty()));
-	
-	bookie_column.setCellValueFactory(new PropertyValueFactory<>("odd_bookmakers"));
-	home_column.setCellValueFactory(new PropertyValueFactory<>("odd_1"));
-	draw_column.setCellValueFactory(new PropertyValueFactory<>("odd_x"));
+
+    public void initializeMatches() {
+        String currentDate = Utils.getFormattedCurrentDate();
+        List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
+        comingEventsList.getItems().addAll(matchesRetrieved);
+
+        model.matchesProperty().get().addListener(new ListChangeListener<Match>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Match> c) {
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        for (Match match : c.getAddedSubList()) {
+                            comingEventsList.getItems().add(match);
+                        }
+                    }
+                }
+            }
+        });
+
+        comingEventsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Match>() {
+            @Override
+            public void changed(ObservableValue<? extends Match> observable, Match oldValue, Match newValue) {
+                if (newValue != null) {
+                    newValue.onFocus();
+                }
+            }
+        });
+    }
+
+    private void initOddTable() {
+        oddTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        oddTable.itemsProperty().bind(new SimpleObjectProperty<>(model.oddRowsProperty()));
+
+        bookie_column.setCellValueFactory(new PropertyValueFactory<>("odd_bookmakers"));
+        home_column.setCellValueFactory(new PropertyValueFactory<>("odd_1"));
+        draw_column.setCellValueFactory(new PropertyValueFactory<>("odd_x"));
         away_column.setCellValueFactory(new PropertyValueFactory<>("odd_2"));
         over_column.setCellValueFactory(new PropertyValueFactory<>("over"));
         under_column.setCellValueFactory(new PropertyValueFactory<>("under"));
     }
-        
-        public void loadEventOdds(String id){
-            model.oddRowsProperty().clear();
-            model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id));
-            
-            if(oddTable.getItems().isEmpty()) {
-               oddTable.setPlaceholder(new Label("No hay cuotas disponibles para este partido"));
-            }
+
+    public void loadEventOdds(String id) {
+        String currentDate = Utils.getFormattedCurrentDate();
+        model.oddRowsProperty().clear();
+        model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id, currentDate, currentDate));
+
+        if (oddTable.getItems().isEmpty()) {
+            oddTable.setPlaceholder(new Label("No hay cuotas disponibles para este partido"));
         }
-        
-        @FXML 
-        public void lvOnClick(MouseEvent arg0) {
-            loadEventOdds(comingEventsList.getSelectionModel().getSelectedItem().getId());
-        }
+    }
+
+    @FXML
+    public void lvOnClick(MouseEvent arg0) {
+        loadEventOdds(comingEventsList.getSelectionModel().getSelectedItem().getId());
+    }
 }

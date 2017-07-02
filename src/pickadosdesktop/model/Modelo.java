@@ -16,6 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pickadosdesktop.dao.IDAO;
 import pickadosdesktop.service.ApiFootballServices;
+import pickadosdesktop.service.ApiParser;
+import pickadosdesktop.service.Utils;
 
 /**
  *
@@ -30,7 +32,7 @@ public class Modelo {
     
         public Modelo(IDAO clientDAO, long msRefresco) {
 	matches = new SimpleObjectProperty<>(FXCollections.observableArrayList());
-        apiFootballServices = new ApiFootballServices();
+        apiFootballServices = new ApiFootballServices(Utils.getProperty("api"), Utils.getProperty("apiKey"), new ApiParser());
         oddRows = FXCollections.observableArrayList();
         this.clientDAO = clientDAO;
         
@@ -40,7 +42,8 @@ public class Modelo {
                 Platform.runLater(new Runnable() {
                 @Override 
                 public void run(){
-                    List<Match> matchesRetrieved = apiFootballServices.getLiveMatches();
+                    String currentDate = Utils.getFormattedCurrentDate();
+                    List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
                     matches.get().addAll(matchesRetrieved);
                 }});
 	    }
