@@ -27,7 +27,7 @@
          <center>
             <Pane prefHeight="357.0" prefWidth="284.0" BorderPane.alignment="CENTER">
                <children>
-                  <TableView fx:id="oddTable" layoutY="23.0" prefHeight="335.0" prefWidth="385.0" stylesheets="@../../resources/table-view.css">
+                  <TableView fx:id="oddTable" layoutY="23.0" prefHeight="335.0" prefWidth="385.0" stylesheets="@../../assets/styles/table-view.css">
                     <columns>
                       <TableColumn fx:id="bookie_column" prefWidth="75.0" text="Bookie" />
                       <TableColumn fx:id="home_column" prefWidth="37.0" text="Local" />
