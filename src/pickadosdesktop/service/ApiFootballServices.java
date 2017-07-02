@@ -15,6 +15,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
 import pickadosdesktop.entity.Odd;
 import pickadosdesktop.model.OddRow;
@@ -25,14 +26,17 @@ import pickadosdesktop.model.OddRow;
  */
 public class ApiFootballServices {
     
-    private Utils utils = new Utils();
+    private final static String apiUrl = Utils.getProperty("api");
+    private final static String apiKey = Utils.getProperty("apiKey");
+    private final static Logger logger = Logger.getLogger(ApiFootballServices.class);
 
     public List<Match> getMatches() {
         Gson gson = new Gson();
         List<Match> matchesRetrieved = new ArrayList<>();
-        String currentDate = utils.getFormattedCurrentDate();
+        String currentDate = Utils.getFormattedCurrentDate();
+        
         try {
-            URL url = new URL("https://apifootball.com/api/?action=get_events&from=" + currentDate + "&to=" + currentDate + "&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
+            URL url = new URL(apiUrl+ "get_events&from=" + currentDate + "&to=" + currentDate + "&APIkey=" + apiKey);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {
@@ -40,9 +44,10 @@ public class ApiFootballServices {
                 }.getType();
                 matchesRetrieved = gson.fromJson(response, matchType);
             }
-
+            
+            logger.info("Events for today were loaded successfully");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error while trying to load events for today. It was produced by: "+ex.getMessage());
         }
         return matchesRetrieved;
     }
@@ -50,11 +55,11 @@ public class ApiFootballServices {
     public List<Match> getLiveMatches() {
         Gson gson = new Gson();
         List<Match> matchesRetrieved = new ArrayList<>();
-        String currentDate = utils.getFormattedCurrentDate();
-
+        String currentDate = Utils.getFormattedCurrentDate();
+        
         try {
             
-            URL url = new URL("https://apifootball.com/api/?action=get_events&from=" + currentDate + "&to=" + currentDate + "&match_live=1&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd");
+            URL url = new URL(apiUrl+ "get_events&from=" + currentDate + "&to=" + currentDate + "&match_live=1&APIkey="+ apiKey);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {
@@ -62,9 +67,9 @@ public class ApiFootballServices {
                 }.getType();
                 matchesRetrieved = gson.fromJson(response, matchType);
             }
-
+            logger.info("Live matchs were loaded successfully");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error while trying to load live matchs. It was produced by: "+ex.getMessage());
         }
         return matchesRetrieved;
     }
@@ -73,9 +78,9 @@ public class ApiFootballServices {
         Gson gson = new Gson();
         List<OddRow> rows = new ArrayList<>();
         List<Odd> odds = new ArrayList<>();
-        String currentDate = utils.getFormattedCurrentDate();
+        String currentDate = Utils.getFormattedCurrentDate();
         try {
-            URL url = new URL("https://apifootball.com/api/?action=get_odds&from=" + currentDate + "&to=" + currentDate + "&APIkey=a5dfecb261f17d6f3644e14059d5220bb043042c983b19102d3e74af46ead2fd&match_id="+matchId);
+            URL url = new URL(apiUrl+"get_odds&from=" + currentDate + "&to=" + currentDate + "&APIkey="+apiKey+"&match_id="+matchId);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
             String response = "";
             while (null != (response = br.readLine())) {
@@ -87,9 +92,10 @@ public class ApiFootballServices {
             for(Odd odd: odds) {
                 rows.add(new OddRow(odd));
             }
+            logger.info("Succesfully loaded odds for match: " + matchId);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error while trying to load odd for match: " + matchId + ". It was produced by: "+ex.getMessage());
         }
         return rows;
     }
