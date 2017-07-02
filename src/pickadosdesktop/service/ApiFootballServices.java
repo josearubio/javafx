@@ -7,18 +7,13 @@ package pickadosdesktop.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
-import pickadosdesktop.entity.Odd;
 import pickadosdesktop.model.OddRow;
 
 /**
@@ -57,7 +52,7 @@ public class ApiFootballServices {
         try {
             String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&APIkey=" + apiKey;
             String response =  makeRequest(requestURL);
-            matchesRetrieved = (List<Match>)apiParser.parseListOfMatches(response);
+            matchesRetrieved = apiParser.parseListOfMatches(response);
             logger.info("Events for today were loaded successfully");
         } catch (Exception ex) {
             logger.error("Error while trying to load events for today. It was produced by: "+ex.getMessage());
@@ -72,7 +67,7 @@ public class ApiFootballServices {
             
             String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&match_live=1&APIkey="+ apiKey;
             String response = makeRequest(requestURL);
-            matchesRetrieved = (List<Match>)apiParser.parseListOfMatches(response);
+            matchesRetrieved = apiParser.parseListOfMatches(response);
             logger.info("Live matchs were loaded successfully");
         } catch (Exception ex) {
             logger.error("Error while trying to load live matchs. It was produced by: "+ex.getMessage());
@@ -86,7 +81,7 @@ public class ApiFootballServices {
         try {
             String requestURL = apiUrl+"get_odds&from=" + fromDate + "&to=" + toDate + "&APIkey="+apiKey+"&match_id="+matchId;
             String response = makeRequest(requestURL);
-            rows = (List<OddRow>)apiParser.parseListOfOdds(response);
+            rows = apiParser.parseListOfOdds(response);
             logger.info("Succesfully loaded odds for match: " + matchId);
 
         } catch (Exception ex) {

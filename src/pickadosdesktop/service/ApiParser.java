@@ -7,7 +7,6 @@ package pickadosdesktop.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.BufferedReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ public class ApiParser {
 
     private final static Logger logger = Logger.getLogger(ApiParser.class);
 
-    public List<?> parseListOfMatches(String response) {
+    public List<Match> parseListOfMatches(String response) {
         Gson gson = new Gson();
         List<Match> parsedMatchs = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class ApiParser {
         return parsedMatchs;
     }
 
-    public List<?> parseListOfOdds(String response) {
+    public List<OddRow> parseListOfOdds(String response) {
         Gson gson = new Gson();
         List<Odd> odds = new ArrayList<>();
         List<OddRow> parsedRows = new ArrayList<>();
