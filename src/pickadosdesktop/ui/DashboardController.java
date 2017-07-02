@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -64,16 +65,14 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb){
         clientDAO = new LocalDAO();
         model = new Modelo(clientDAO, 0);
-       // comingEventsList.itemsProperty().bind(modelo.matchesProperty());
         initializeMatches();
         initOddTable();
     }    
     
     public void initializeMatches(){
-        List<Match> matchList = clientDAO.getMatches();
-        for(Match match : matchList){
-            comingEventsList.getItems().add(match);
-        }
+        
+        List<Match> matchesRetrieved = apiFootballServices.getLiveMatches();
+        comingEventsList.getItems().addAll(matchesRetrieved);
         
     	model.matchesProperty().get().addListener(new ListChangeListener<Match>() {
 	    @Override
@@ -113,6 +112,10 @@ public class DashboardController implements Initializable {
         public void loadEventOdds(String id){
             model.oddRowsProperty().clear();
             model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id));
+            
+            if(oddTable.getItems().isEmpty()) {
+               oddTable.setPlaceholder(new Label("No hay cuotas disponibles para este partido"));
+            }
         }
         
         @FXML 

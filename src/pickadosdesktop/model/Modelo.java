@@ -5,7 +5,6 @@
  */
 package pickadosdesktop.model;
 
-import pickadosdesktop.entity.Odd;
 import pickadosdesktop.entity.Match;
 import java.util.List;
 import java.util.Timer;
@@ -34,10 +33,6 @@ public class Modelo {
         apiFootballServices = new ApiFootballServices();
         oddRows = FXCollections.observableArrayList();
         this.clientDAO = clientDAO;
-        
-        for(Match match: this.clientDAO.getMatches()) {
-            matches.get().add(match);
-        }
         
         TimerTask delayedTask = new TimerTask() {
 	    @Override
