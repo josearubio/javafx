@@ -6,16 +6,24 @@
 package pickadosdesktop.ui;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -23,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.StringConverter;
 import pickadosdesktop.dao.IDAO;
 import pickadosdesktop.dao.LocalDAO;
 import pickadosdesktop.entity.Match;
@@ -60,6 +69,8 @@ public class DashboardController implements Initializable {
     private TableColumn<OddRow, String> over_column;
     @FXML
     private TableColumn<OddRow, String> under_column;
+    @FXML
+    private DatePicker datePicker;
 
     
     private final ApiFootballServices apiFootballServices = new ApiFootballServices(Utils.getProperty("api"), Utils.getProperty("apiKey"), new ApiParser());
@@ -75,14 +86,60 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         clientDAO = new LocalDAO();
         model = new Modelo(clientDAO, 0);
-        initializeMatches();
+        Date today = new Date();
+        
+        loadMatches(today);
         initOddTable();
+        initDatePicker();
+       
     }
 
-    public void initializeMatches() {
-        String currentDate = Utils.getFormattedCurrentDate();
+    public void initDatePicker(){
+        
+        
+        String pattern = "yyyy-MM-dd";
+
+        datePicker.setPromptText(pattern.toLowerCase());
+
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+             @Override 
+             public String toString(LocalDate date) {
+                 if (date != null) {
+                     return dateFormatter.format(date);
+                 } else {
+                     return "";
+                 }
+             }
+
+             @Override 
+             public LocalDate fromString(String string) {
+                 if (string != null && !string.isEmpty()) {
+                     return LocalDate.parse(string, dateFormatter);
+                 } else {
+                     return null;
+                 }
+             }
+         });
+        
+        datePicker.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event)
+            {
+                LocalDate selectedDate = datePicker.getValue();
+                Date date = Date.from(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                loadMatches(date);
+            }
+
+        });
+    }
+ 
+    public void loadMatches(Date date) {
+        String dateSelected = Utils.formatDate(date);
         try{
-            List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
+            List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(dateSelected, dateSelected);
+            comingEventsList.getItems().clear();
             comingEventsList.getItems().addAll(matchesRetrieved);
         } catch(WrongRequestException ex) {
            DialogService.showDialog("Error en la petición","No se han podido obtener los partidos", "Se produjo un error mientras se intentaban recuperar los partidos que se están disputando. Se volverá a intentar de nuevo automáticamente.", Alert.AlertType.WARNING);
@@ -127,8 +184,8 @@ public class DashboardController implements Initializable {
         under_column.setCellValueFactory(new PropertyValueFactory<>("under"));
     }
 
-    public void loadEventOdds(String id) {
-        String currentDate = Utils.getFormattedCurrentDate();
+    public void loadEventOdds(String id, Date date) {
+        String currentDate = Utils.formatDate(date);
         model.oddRowsProperty().clear();
         try {
             model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id, currentDate, currentDate));
@@ -144,7 +201,10 @@ public class DashboardController implements Initializable {
     }
 
     @FXML
-    public void lvOnClick(MouseEvent arg0) {
-        loadEventOdds(comingEventsList.getSelectionModel().getSelectedItem().getId());
+    public void lvOnClick(MouseEvent arg0) throws Exception {
+        String match_date = comingEventsList.getSelectionModel().getSelectedItem().getMatchDate();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = formatter.parse(match_date);
+        loadEventOdds(comingEventsList.getSelectionModel().getSelectedItem().getId(), date);
     }
 }

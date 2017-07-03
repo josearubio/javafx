@@ -5,6 +5,7 @@
  */
 package pickadosdesktop.model;
 
+import java.util.Date;
 import pickadosdesktop.entity.Match;
 import java.util.List;
 import java.util.Timer;
@@ -47,7 +48,8 @@ public class Modelo {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        String currentDate = Utils.getFormattedCurrentDate();
+                        Date today = new Date();
+                        String currentDate = Utils.formatDate(today);
                         try {
                             List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
                              matches.get().addAll(matchesRetrieved);

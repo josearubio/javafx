@@ -25,9 +25,9 @@ public class LocalDAO implements IDAO{
     //private Connection conn = DBManager.getConnection(); 
     
     public LocalDAO () {
-        Match match1 = new Match("1","Elche", "Hércules", State.UNSTARTED,0);
-        Match match2 = new Match("2","Albacete", "Oviedo", State.UNSTARTED,0);
-        Match match3 = new Match("3","Valencia", "Eibar", State.UNSTARTED,0);
+        Match match1 = new Match("1","Elche", "Hércules", State.UNSTARTED,0,"2017-07-01");
+        Match match2 = new Match("2","Albacete", "Oviedo", State.UNSTARTED,0,"2017-07-01");
+        Match match3 = new Match("3","Valencia", "Eibar", State.UNSTARTED,0,"2017-07-01");
         matchList.add(match1);
         matchList.add(match2);
         matchList.add(match3);

@@ -25,10 +25,11 @@ public class Match {
     private String home_score;
     @SerializedName("match_awayteam_score") 
     private String away_score;
+    private String match_date;
     private int match_live;
     private List<Odd> odds;
 
-    public Match(String id, String home_team, String away_team, State state, int match_live) {
+    public Match(String id, String home_team, String away_team, State state, int match_live, String match_date) {
         this.id = id;
         this.home_team = home_team;
         this.away_team = away_team;
@@ -36,6 +37,7 @@ public class Match {
         this.match_live = match_live;
         this.home_score = "";
         this.away_score = "";
+        this.match_date = match_date;
     }
 
     public String getMatch_hometeam_name() {
@@ -116,6 +118,14 @@ public class Match {
 
     public void setOdds(List<Odd> odds) {
         this.odds = odds;
+    }
+    
+    public void setMatchDate(String match_date){
+        this.match_date = match_date;
+    }
+    
+    public String getMatchDate(){
+        return this.match_date;
     }
 
     public void onFocus() {

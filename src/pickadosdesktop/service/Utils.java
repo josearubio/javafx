@@ -10,9 +10,8 @@ import pickadosdesktop.ui.PickadosApp;
 public final class Utils {
     private final static Logger logger = Logger.getLogger(Utils.class);
     
-    public static String getFormattedCurrentDate(){
+    public static String formatDate(Date date){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
         return dateFormat.format(date);
     }
     

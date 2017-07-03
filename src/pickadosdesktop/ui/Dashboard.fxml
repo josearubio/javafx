@@ -11,7 +11,7 @@
    <children>
       <BorderPane layoutX="2.0" layoutY="2.0" prefHeight="445.0" prefWidth="637.0">
          <left>
-            <TitledPane animated="false" prefHeight="322.0" prefWidth="221.0" text="Eventos de hoy" textFill="#5b5b9a" BorderPane.alignment="CENTER">
+            <TitledPane animated="false" prefHeight="322.0" prefWidth="221.0" text="Eventos disponibles" textFill="#4646f5" BorderPane.alignment="CENTER">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="200.0">
                      <children>
@@ -20,7 +20,7 @@
                   </AnchorPane>
               </content>
                <font>
-                  <Font size="15.0" />
+                  <Font size="19.0" />
                </font>
             </TitledPane>
          </left>
@@ -45,7 +45,16 @@
             </Pane>
          </center>
          <top>
-            <Pane prefHeight="47.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
+            <Pane prefHeight="47.0" prefWidth="637.0" BorderPane.alignment="CENTER">
+               <children>
+                  <DatePicker fx:id="datePicker" layoutX="449.0" layoutY="11.0" />
+                  <Text fill="#04000d" layoutX="350.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha a consultar:" wrappingWidth="96.13671875" />
+                  <Text layoutX="14.0" layoutY="33.0" stroke="#c4ffe0" strokeType="OUTSIDE" text="Pickados - Panel" wrappingWidth="182.13671875">
+                     <font>
+                        <Font name="Coo Hew" size="25.0" />
+                     </font>
+                  </Text>
+               </children></Pane>
          </top>
          <bottom>
             <Pane prefHeight="33.0" prefWidth="637.0" BorderPane.alignment="CENTER" />
