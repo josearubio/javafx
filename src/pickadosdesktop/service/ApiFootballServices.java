@@ -67,18 +67,21 @@ public class ApiFootballServices {
         return matchesRetrieved;
     }
 
-    public List<Match> getLiveMatches(String fromDate, String toDate) {
+    public List<Match> getLiveMatches(String fromDate, String toDate) throws WrongRequestException, ParsingResponseException{
         List<Match> matchesRetrieved = new ArrayList<>();
-        
+        String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&match_live=1&APIkey="+ apiKey;
+         
         try {
-            
-            String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&match_live=1&APIkey="+ apiKey;
             String response = makeRequest(requestURL);
             matchesRetrieved = apiParser.parseListOfMatches(response);
             logger.info("Live matchs were loaded successfully");
-        } catch (Exception ex) {
+        }catch (IOException ex) {
+            logger.error("Error while trying to make a request to: " + requestURL + ". It was produced by: "+ex.getMessage());
+            throw new WrongRequestException("Error while trying to make a request");
+        } catch(ParsingResponseException ex) {
             logger.error("Error while trying to load live matchs. It was produced by: "+ex.getMessage());
-        }
+            throw new ParsingResponseException(ex.getMessage());
+        } 
         return matchesRetrieved;
     }
 

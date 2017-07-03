@@ -81,8 +81,16 @@ public class DashboardController implements Initializable {
 
     public void initializeMatches() {
         String currentDate = Utils.getFormattedCurrentDate();
-        List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
-        comingEventsList.getItems().addAll(matchesRetrieved);
+        try{
+            List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
+            comingEventsList.getItems().addAll(matchesRetrieved);
+        } catch(WrongRequestException ex) {
+           DialogService.showDialog("Error en la petición","No se han podido obtener los partidos", "Se produjo un error mientras se intentaban recuperar los partidos que se están disputando. Se volverá a intentar de nuevo automáticamente.", Alert.AlertType.WARNING);
+        } catch(ParsingResponseException ex) {
+            DialogService.showDialog("Sin eventos","No hay ningun partidos", "Por el momento no se está disputando ningún partido. Aparecerán automáticamente a medida que vayan comenzado.", Alert.AlertType.INFORMATION);
+        }
+       
+        
 
         model.matchesProperty().get().addListener(new ListChangeListener<Match>() {
             @Override
