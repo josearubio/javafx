@@ -11,7 +11,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
@@ -30,7 +29,7 @@ public class ApiParser {
     public List<Match> parseListOfMatches(String response) throws ParsingResponseException{
         Gson gson = new Gson();
         List<Match> parsedMatchs = new ArrayList<>();
-
+        
         try {
             Type matchType = new TypeToken<Collection<Match>>() {
             }.getType();
@@ -47,6 +46,7 @@ public class ApiParser {
         Gson gson = new Gson();
         List<Odd> odds = new ArrayList<>();
         List<OddRow> parsedRows = new ArrayList<>();
+        
         try {
             Type matchType = new TypeToken<Collection<Odd>>() {
             }.getType();

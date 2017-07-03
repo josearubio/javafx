@@ -12,8 +12,6 @@ import java.util.List;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
 import pickadosdesktop.exceptions.ParsingResponseException;
@@ -70,7 +68,7 @@ public class ApiFootballServices {
     public List<Match> getLiveMatchs(String fromDate, String toDate) throws WrongRequestException, ParsingResponseException{
         List<Match> matchesRetrieved = new ArrayList<>();
         String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&match_live=1&APIkey="+ apiKey;
-         
+        
         try {
             String response = makeRequest(requestURL);
             matchesRetrieved = apiParser.parseListOfMatches(response);

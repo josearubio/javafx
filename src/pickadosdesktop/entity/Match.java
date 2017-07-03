@@ -108,7 +108,7 @@ public class Match {
         this.home_score = home_score;
     }
 
-    public void setHome_away(String home_away) {
+    public void setAway_score(String home_away) {
         this.away_score = home_away;
     }
 
