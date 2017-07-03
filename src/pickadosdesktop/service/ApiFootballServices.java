@@ -12,8 +12,12 @@ import java.util.List;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
+import pickadosdesktop.exceptions.ParsingResponseException;
+import pickadosdesktop.exceptions.WrongRequestException;
 import pickadosdesktop.model.OddRow;
 
 /**
@@ -46,16 +50,19 @@ public class ApiFootballServices {
         this.apiParser = apiParser;
     }
 
-    public List<Match> getMatches(String fromDate, String toDate) {
+    public List<Match> getMatches(String fromDate, String toDate) throws WrongRequestException, ParsingResponseException{
         List<Match> matchesRetrieved = new ArrayList<>();
-        
+        String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&APIkey=" + apiKey;
         try {
-            String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&APIkey=" + apiKey;
             String response =  makeRequest(requestURL);
             matchesRetrieved = apiParser.parseListOfMatches(response);
             logger.info("Events for today were loaded successfully");
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            logger.error("Error while trying to make a request to: " + requestURL + ". It was produced by: "+ex.getMessage());
+            throw new WrongRequestException("Error while trying to make a request");
+        } catch(ParsingResponseException ex) {
             logger.error("Error while trying to load events for today. It was produced by: "+ex.getMessage());
+            throw new ParsingResponseException(ex.getMessage());
         }
         return matchesRetrieved;
     }
@@ -75,17 +82,20 @@ public class ApiFootballServices {
         return matchesRetrieved;
     }
 
-    public List<OddRow> getOddsFromMatch(String matchId, String fromDate, String toDate) {
+    public List<OddRow> getOddsFromMatch(String matchId, String fromDate, String toDate) throws WrongRequestException, ParsingResponseException {
         List<OddRow> rows = new ArrayList<>();
+        String requestURL = apiUrl+"get_odds&from=" + fromDate + "&to=" + toDate + "&APIkey="+apiKey+"&match_id="+matchId;
         
         try {
-            String requestURL = apiUrl+"get_odds&from=" + fromDate + "&to=" + toDate + "&APIkey="+apiKey+"&match_id="+matchId;
             String response = makeRequest(requestURL);
             rows = apiParser.parseListOfOdds(response);
             logger.info("Succesfully loaded odds for match: " + matchId);
 
-        } catch (Exception ex) {
-            logger.error("Error while trying to load odd for match: " + matchId + ". It was produced by: "+ex.getMessage());
+        } catch (IOException ex) {
+            logger.error("Error while trying to make a request to: " + requestURL + ". It was produced by: "+ex.getMessage());
+            throw new WrongRequestException("Error while trying to make a request");
+        } catch(ParsingResponseException ex) {
+            throw new ParsingResponseException(ex.getMessage());
         }
         return rows;
     }

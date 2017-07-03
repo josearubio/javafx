@@ -5,20 +5,31 @@
  */
 package pickadosdesktop.service;
 
+import java.io.IOException;
+
 /**
  *
  * @author Norman
  */
 public class ApiFootballServicesStub extends ApiFootballServices {
     
+    private String response;
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+    
     public ApiFootballServicesStub(String apiUrl, String apiKey, ApiParser apiParser) {
         super(apiUrl, apiKey, apiParser);
     }
     
     @Override
-    public String makeRequest(String requestUrl) {
-        String response = "";  
-         
+    public String makeRequest(String requestUrl) throws IOException{
+        if(response.equals("Exception")) {
+            throw new IOException();
+        }
         return response;
     }
+    
+    
 }

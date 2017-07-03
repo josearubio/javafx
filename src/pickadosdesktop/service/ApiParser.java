@@ -14,6 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
 import pickadosdesktop.entity.Odd;
+import pickadosdesktop.exceptions.ParsingResponseException;
 import pickadosdesktop.model.OddRow;
 
 /**
@@ -24,7 +25,7 @@ public class ApiParser {
 
     private final static Logger logger = Logger.getLogger(ApiParser.class);
 
-    public List<Match> parseListOfMatches(String response) {
+    public List<Match> parseListOfMatches(String response) throws ParsingResponseException{
         Gson gson = new Gson();
         List<Match> parsedMatchs = new ArrayList<>();
 
@@ -35,11 +36,12 @@ public class ApiParser {
             logger.info("Matchs parsed succesfully");
         } catch (Exception ex) {
             logger.error("Error while trying to parsing matchs. It was produced by: " + ex.getMessage());
+            throw new ParsingResponseException("Error while trying to parsing matchs.");
         }
         return parsedMatchs;
     }
 
-    public List<OddRow> parseListOfOdds(String response) {
+    public List<OddRow> parseListOfOdds(String response) throws ParsingResponseException{
         Gson gson = new Gson();
         List<Odd> odds = new ArrayList<>();
         List<OddRow> parsedRows = new ArrayList<>();
@@ -54,6 +56,7 @@ public class ApiParser {
             logger.info("Odds parsed succesfully");
         } catch (Exception ex) {
             logger.error("Error while trying to parsing odds. It was produced by: " + ex.getMessage());
+             throw new ParsingResponseException("Error while trying to parsing odds.");
         }
         return parsedRows;
     }

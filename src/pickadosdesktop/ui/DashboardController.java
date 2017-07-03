@@ -14,6 +14,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -24,10 +26,13 @@ import javafx.scene.input.MouseEvent;
 import pickadosdesktop.dao.IDAO;
 import pickadosdesktop.dao.LocalDAO;
 import pickadosdesktop.entity.Match;
+import pickadosdesktop.exceptions.ParsingResponseException;
+import pickadosdesktop.exceptions.WrongRequestException;
 import pickadosdesktop.model.Modelo;
 import pickadosdesktop.model.OddRow;
 import pickadosdesktop.service.ApiFootballServices;
 import pickadosdesktop.service.ApiParser;
+import pickadosdesktop.service.DialogService;
 import pickadosdesktop.service.Utils;
 
 /**
@@ -117,7 +122,13 @@ public class DashboardController implements Initializable {
     public void loadEventOdds(String id) {
         String currentDate = Utils.getFormattedCurrentDate();
         model.oddRowsProperty().clear();
-        model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id, currentDate, currentDate));
+        try {
+            model.oddRowsProperty().addAll(apiFootballServices.getOddsFromMatch(id, currentDate, currentDate));
+        } catch(WrongRequestException ex) {
+           DialogService.showDialog("Error en la petición","No se han podido obtener las cuotas", "Se produjo un error mientras se intentaban recuperar las cuotas del partido. Intentelo de nuevo", Alert.AlertType.WARNING);
+        } catch(ParsingResponseException ex) {
+            DialogService.showDialog("Sin cuotas","No hay cuotas para este evento", "Por el momento no hay cuotas para este evento. Intentelo de nuevo más tarde.", Alert.AlertType.INFORMATION);
+        }
 
         if (oddTable.getItems().isEmpty()) {
             oddTable.setPlaceholder(new Label("No hay cuotas disponibles para este partido"));

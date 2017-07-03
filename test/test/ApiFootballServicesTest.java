@@ -18,6 +18,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import pickadosdesktop.entity.Match;
 import pickadosdesktop.entity.State;
+import pickadosdesktop.exceptions.WrongRequestException;
+import pickadosdesktop.exceptions.ParsingResponseException;
 import pickadosdesktop.service.ApiFootballServicesStub;
 import pickadosdesktop.service.ApiParser;
 
@@ -26,35 +28,76 @@ import pickadosdesktop.service.ApiParser;
  * @author Norman
  */
 public class ApiFootballServicesTest {
-    
+
     private ApiParser apiParserMock;
     private ApiFootballServicesStub apiServices;
-    
+
     public ApiFootballServicesTest() {
     }
-    
+
     @Before
     public void setUp() {
         apiParserMock = mock(ApiParser.class);
     }
-    
+
     @After
     public void tearDown() {
     }
 
-   
     @Test
-    public void should_return_list_of_matchs() throws IOException {
-         List <Match> matchList = new ArrayList<Match>();
-         Match m1 = new Match("1", "F.C. Barcelona", "R. Madrid", State.UNSTARTED, 0);
-         matchList.add(m1);
-         
-         when(apiParserMock.parseListOfMatches(Mockito.anyString())).thenReturn(matchList);
-         apiServices = new ApiFootballServicesStub("", "", apiParserMock);
-         
-         List <Match> actualList = apiServices.getMatches("", "");
-         
-         Assert.assertEquals(matchList, actualList);
-         verify(apiParserMock).parseListOfMatches(Mockito.anyString());
+    public void should_return_list_of_matchs() throws IOException, ParsingResponseException {
+        List<Match> matchList = new ArrayList<Match>();
+        Match m1 = new Match("1", "F.C. Barcelona", "R. Madrid", State.UNSTARTED, 0);
+        matchList.add(m1);
+
+        try {
+            when(apiParserMock.parseListOfMatches(Mockito.anyString())).thenReturn(matchList);
+            apiServices = new ApiFootballServicesStub("", "", apiParserMock);
+            apiServices.setResponse("");
+            List<Match> actualList = apiServices.getMatches("", "");
+
+            Assert.assertEquals(matchList, actualList);
+            verify(apiParserMock).parseListOfMatches(Mockito.anyString());
+        } catch (Exception ex) {
+            Assert.fail("It should not throw any exception");
+        }
+
+    }
+
+    @Test
+    public void should_throw_wrong_request_exception() {
+        List<Match> matchList = new ArrayList<Match>();
+
+        try {
+            when(apiParserMock.parseListOfMatches(Mockito.anyString())).thenReturn(matchList);
+            apiServices = new ApiFootballServicesStub("", "", apiParserMock);
+            apiServices.setResponse("Exception");
+            List<Match> actualList = apiServices.getMatches("", "");
+
+            Assert.assertEquals(matchList, actualList);
+            verify(apiParserMock).parseListOfMatches(Mockito.anyString());
+        } catch (WrongRequestException ex) {
+        } catch(ParsingResponseException ex) {
+             Assert.fail("It should throws WrongRequestException");
+        }
+    }
+    
+    @Test
+    public void should_throw_parsing_response_exception() {
+        List<Match> matchList = new ArrayList<Match>();
+
+        try {
+            when(apiParserMock.parseListOfMatches(Mockito.anyString())).thenThrow(ParsingResponseException.class);
+            apiServices = new ApiFootballServicesStub("", "", apiParserMock);
+            apiServices.setResponse("");
+            List<Match> actualList = apiServices.getMatches("", "");
+
+            Assert.assertEquals(matchList, actualList);
+            verify(apiParserMock).parseListOfMatches(Mockito.anyString());
+        } catch (WrongRequestException ex) {
+            Assert.fail("It should throws ParsingResponseException");
+        } catch(ParsingResponseException ex) {
+             
+        }
     }
 }
