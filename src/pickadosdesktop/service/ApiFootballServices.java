@@ -67,7 +67,7 @@ public class ApiFootballServices {
         return matchesRetrieved;
     }
 
-    public List<Match> getLiveMatches(String fromDate, String toDate) throws WrongRequestException, ParsingResponseException{
+    public List<Match> getLiveMatchs(String fromDate, String toDate) throws WrongRequestException, ParsingResponseException{
         List<Match> matchesRetrieved = new ArrayList<>();
         String requestURL = apiUrl+ "get_events&from=" + fromDate + "&to=" + toDate + "&match_live=1&APIkey="+ apiKey;
          

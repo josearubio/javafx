@@ -138,7 +138,7 @@ public class DashboardController implements Initializable {
     public void loadMatches(Date date) {
         String dateSelected = Utils.formatDate(date);
         try{
-            List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(dateSelected, dateSelected);
+            List<Match> matchesRetrieved = apiFootballServices.getLiveMatchs(dateSelected, dateSelected);
             comingEventsList.getItems().clear();
             comingEventsList.getItems().addAll(matchesRetrieved);
         } catch(WrongRequestException ex) {
@@ -158,15 +158,6 @@ public class DashboardController implements Initializable {
                             comingEventsList.getItems().add(match);
                         }
                     }
-                }
-            }
-        });
-
-        comingEventsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Match>() {
-            @Override
-            public void changed(ObservableValue<? extends Match> observable, Match oldValue, Match newValue) {
-                if (newValue != null) {
-                    newValue.onFocus();
                 }
             }
         });

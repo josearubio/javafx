@@ -51,7 +51,7 @@ public class Modelo {
                         Date today = new Date();
                         String currentDate = Utils.formatDate(today);
                         try {
-                            List<Match> matchesRetrieved = apiFootballServices.getLiveMatches(currentDate, currentDate);
+                            List<Match> matchesRetrieved = apiFootballServices.getLiveMatchs(currentDate, currentDate);
                              matches.get().addAll(matchesRetrieved);
                         } catch (WrongRequestException ex) {
                         } catch (ParsingResponseException ex) {

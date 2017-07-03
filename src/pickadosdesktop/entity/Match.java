@@ -127,10 +127,6 @@ public class Match {
     public String getMatchDate(){
         return this.match_date;
     }
-
-    public void onFocus() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     public String toString() {
         return "" + home_team + " " + home_score + " - " + " " + away_score + " " + away_team + "";

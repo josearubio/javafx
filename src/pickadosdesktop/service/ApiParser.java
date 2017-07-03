@@ -11,6 +11,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import pickadosdesktop.entity.Match;
 import pickadosdesktop.entity.Odd;
@@ -49,10 +51,9 @@ public class ApiParser {
             Type matchType = new TypeToken<Collection<Odd>>() {
             }.getType();
             odds = gson.fromJson(response, matchType);
-
-            for (Odd odd : odds) {
-                parsedRows.add(new OddRow(odd));
-            }
+            parsedRows = odds.stream()
+                    .map(odd -> new OddRow(odd))
+                    .collect(Collectors.toList());
             logger.info("Odds parsed succesfully");
         } catch (Exception ex) {
             logger.error("Error while trying to parsing odds. It was produced by: " + ex.getMessage());
